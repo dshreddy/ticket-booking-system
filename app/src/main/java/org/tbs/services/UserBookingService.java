@@ -1,12 +1,10 @@
 package org.tbs.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.tbs.entities.User;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 public class UserBookingService {
@@ -25,6 +23,9 @@ public class UserBookingService {
             userList = objectMapper.readValue(users, new TypeReference<List<User>>() {});
         } catch (Exception ex) {
             System.out.println("Failed to load the users list from json file : " + ex);
+        }
+        if(userList == null) {
+            userList = new ArrayList<>();
         }
     }
 
@@ -53,8 +54,8 @@ public class UserBookingService {
 
     private void saveUserListToFile() {
         try {
-            objectMapper.writeValueAsBytes(userList);
-        } catch (JsonProcessingException e) {
+            objectMapper.writeValue(new File(USERS_FILE_PATH), userList);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
